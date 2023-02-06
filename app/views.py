@@ -1,13 +1,9 @@
-from django.shortcuts import render
-from rest_framework import status
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, \
-    ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
-from app.models import Product
-from app.serializers import ProductModelSerializer
+from app.models import Product, Category, Comment
+from app.permission import IsAuthOrReadOnlyPermission
+from app.serializers import ProductModelSerializer, CategoryModelSerializer, CommentModelSerializer
 
 
 # class ProductView(APIView):
@@ -67,3 +63,38 @@ from app.serializers import ProductModelSerializer
 class ProductView(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductModelSerializer
+    permission_classes = [IsAuthenticated, ]
+
+
+class CategoryView(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategoryModelSerializer
+    permission_classes = (IsAdminUser, )
+
+
+# class CommentView(ModelViewSet):
+#     queryset = Comment.objects.all()
+#     serializer_class = CommentModelSerializer
+#     permission_classes = (IsAuthenticatedOrReadOnly, )
+
+
+class CommentView(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentModelSerializer
+    permission_classes = (IsAuthOrReadOnlyPermission, )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

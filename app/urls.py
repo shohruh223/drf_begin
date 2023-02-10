@@ -18,6 +18,3 @@ urlpatterns = [
     # path('product/<int:pk>', ProductRetrieveView.as_view()),
     path('', include(router.urls))
 ]
-
-
-

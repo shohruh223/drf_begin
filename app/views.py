@@ -1,6 +1,8 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
-
 from app.models import Product, Category, Comment
 from app.permission import IsAuthOrReadOnlyPermission
 from app.serializers import ProductModelSerializer, CategoryModelSerializer, CommentModelSerializer
@@ -59,11 +61,22 @@ from app.serializers import ProductModelSerializer, CategoryModelSerializer, Com
 #     queryset = Product.objects.all()
 #     serializer_class = ProductModelSerializer
 
+# class CustomPagination(PageNumberPagination):
+#     page_size = 3
+#     page_size_query_param = 'page_size'
+#     max_page_size = 100
+
 
 class ProductView(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductModelSerializer
-    permission_classes = [IsAuthenticated, ]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['title', 'price']
+    search_fields = ['title', 'price']
+    ordering_fields = '__all__'
+
+    # permission_classes = [IsAuthenticated, ]
+    # pagination_class = CustomPagination
 
 
 class CategoryView(ModelViewSet):
